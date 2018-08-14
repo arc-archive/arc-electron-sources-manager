@@ -1,6 +1,6 @@
 {
   "name": "@advanced-rest-client/arc-electron-sources-manager",
-  "version": "0.1.0-rc1",
+  "version": "0.1.0-rc2",
   "description": "A package to handle ARC preferences state in both rendered and main process",
   "main": "index.js",
   "scripts": {
