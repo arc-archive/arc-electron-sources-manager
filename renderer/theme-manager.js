@@ -130,6 +130,10 @@ class ThemeManager {
         sc.innerText = el.innerText;
         newStyle.appendChild(sc);
         document.body.appendChild(newStyle);
+        Polymer.RenderStatus.afterNextRender(this, () => {
+          Polymer.updateStyles({});
+          resolve();
+        });
       }, () => {
         console.error(`Unable to load theme definition from ${themeLocation}.`);
         resolve();
