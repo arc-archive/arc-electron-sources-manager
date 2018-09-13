@@ -69,6 +69,11 @@ class SourcesManager {
      * @type {ThemeInfo}
      */
     this.themeInfo = new ThemeInfo(this.infoFilePath);
+    /**
+     * Main module (ARC's) path location to generate absolute URL
+     * @type {String}
+     */
+    this.root = path.dirname(require.main.filename);
 
     this._listThemesHandler = this._listThemesHandler.bind(this);
     this._themeInfoHandler = this._themeInfoHandler.bind(this);
@@ -170,7 +175,7 @@ class SourcesManager {
       return this.resolvePath(so.themeFile);
     }
     const theme = this._getThemePathComponent(settings);
-    return path.join(this.sourcesBasePath, theme, this.importFileName);
+    return path.join(this.root, this.sourcesBasePath, theme, this.importFileName);
   }
   /**
    * Reads web components import file location for search window.
@@ -183,7 +188,7 @@ class SourcesManager {
       return this.resolvePath(so.searchFile);
     }
     const theme = this._getThemePathComponent(settings);
-    return path.join(this.sourcesBasePath, theme, this.searchFileName);
+    return path.join(this.root, this.sourcesBasePath, theme, this.searchFileName);
   }
   /**
    * Reads location to the theme file.

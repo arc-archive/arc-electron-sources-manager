@@ -79,12 +79,12 @@ describe('SourcesManager basic tests- main process', function() {
       const result = instance._getImportFileLocation({
         theme: instance.anypointTheme
       }, {});
-      assert.equal(result, 'components/anypoint/import.html');
+      assert.notEqual(result.indexOf('components/anypoint/import.html'), -1);
     });
 
     it('Returns default path', function() {
       const result = instance._getImportFileLocation({}, {});
-      assert.equal(result, 'components/default/import.html');
+      assert.notEqual(result.indexOf('components/default/import.html'), -1);
     });
   });
 
@@ -133,12 +133,12 @@ describe('SourcesManager basic tests- main process', function() {
       const result = instance._getSearchFileLocation({
         theme: instance.anypointTheme
       }, {}, themes);
-      assert.equal(result, 'components/anypoint/import-search-bar.html');
+      assert.notEqual(result.indexOf('components/anypoint/import-search-bar.html'), -1);
     });
 
     it('Returns default path', function() {
       const result = instance._getSearchFileLocation({}, {}, themes);
-      assert.equal(result, 'components/default/import-search-bar.html');
+      assert.notEqual(result.indexOf('components/default/import-search-bar.html'), -1);
     });
   });
 
@@ -148,8 +148,8 @@ describe('SourcesManager basic tests- main process', function() {
       return instance.getAppConfig()
       .then((info) => {
         assert.equal(info.appComponents, 'components/default');
-        assert.equal(info.importFile, 'components/default/import.html');
-        assert.equal(info.searchFile, 'components/default/import-search-bar.html');
+        assert.notEqual(info.importFile.indexOf('components/default/import.html'), -1);
+        assert.notEqual(info.searchFile.indexOf('components/default/import-search-bar.html'), -1);
         assert.notEqual(info.themeFile.indexOf('default-theme'), -1);
       });
     });
@@ -167,7 +167,8 @@ describe('SourcesManager basic tests- main process', function() {
       return instance.getAppConfig()
       .then((info) => {
         assert.equal(info.appComponents, 'components/anypoint');
-        assert.equal(info.importFile, 'components/anypoint/import.html');
+        assert.notEqual(info.importFile.indexOf('components/anypoint/import.html'), -1);
+        assert.notEqual(info.searchFile.indexOf('components/anypoint/import-search-bar.html'), -1);
         assert.notEqual(info.themeFile.indexOf('anypoint/anypoint.html'), -1);
       });
     });
