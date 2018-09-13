@@ -60,6 +60,11 @@ class SourcesManager {
      */
     this.importFileName = 'import.html';
     /**
+     * Name of application search page import file.
+     * @type {String}
+     */
+    this.searchFileName = 'import-search-bar.html';
+    /**
      * Instance of ThemeInfo class.
      * @type {ThemeInfo}
      */
@@ -123,9 +128,20 @@ class SourcesManager {
     const result = {
       appComponents: this._getAppComponentsLocation(settings, so),
       importFile: this._getImportFileLocation(settings, so),
-      themeFile: this._getThemeFileLocation(settings, so, themeInfo)
+      themeFile: this._getThemeFileLocation(settings, so, themeInfo),
+      searchFile: this._getSearchFileLocation(settings, so)
     };
     return result;
+  }
+  /**
+   * Returns name for the main theme location.
+   * Currently it can only be `anypoint` or `detault`.
+   * @param {?Object} settings Application settings
+   * @return {String} Path component to the theme main folder.
+   */
+  _getThemePathComponent(settings) {
+    const tid = (settings && settings.theme) || this.default;
+    return tid === this.anypointTheme ? 'anypoint' : 'default';
   }
   /**
    * Reads application web components location.
@@ -140,11 +156,8 @@ class SourcesManager {
     if (so.appComponents) {
       return this.resolvePath(so.appComponents);
     }
-    const tid = settings.theme || this.default;
-    if (tid === this.anypointTheme) {
-      return path.join(this.sourcesBasePath, 'anypoint');
-    }
-    return path.join(this.sourcesBasePath, 'default');
+    const theme = this._getThemePathComponent(settings);
+    return path.join(this.sourcesBasePath, theme);
   }
   /**
    * Reads web components import file location.
@@ -156,11 +169,21 @@ class SourcesManager {
     if (so.importFile) {
       return this.resolvePath(so.themeFile);
     }
-    const tid = settings.theme || this.default;
-    if (tid === this.anypointTheme) {
-      return path.join(this.sourcesBasePath, 'anypoint', this.importFileName);
+    const theme = this._getThemePathComponent(settings);
+    return path.join(this.sourcesBasePath, theme, this.importFileName);
+  }
+  /**
+   * Reads web components import file location for search window.
+   * @param {Object} settings Current application settings.
+   * @param {Object} so Startup options
+   * @return {String} Path to web component import file for search window
+   */
+  _getSearchFileLocation(settings, so) {
+    if (so.searchFile) {
+      return this.resolvePath(so.searchFile);
     }
-    return path.join(this.sourcesBasePath, 'default', this.importFileName);
+    const theme = this._getThemePathComponent(settings);
+    return path.join(this.sourcesBasePath, theme, this.searchFileName);
   }
   /**
    * Reads location to the theme file.
