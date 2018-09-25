@@ -132,6 +132,7 @@ class SourcesManager {
     const so = this.startupOptions;
     const result = {
       appComponents: this._getAppComponentsLocation(settings, so),
+      importDir: this._getImportDirLocation(settings),
       importFile: this._getImportFileLocation(settings, so),
       themeFile: this._getThemeFileLocation(settings, so, themeInfo),
       searchFile: this._getSearchFileLocation(settings, so)
@@ -163,6 +164,15 @@ class SourcesManager {
     }
     const theme = this._getThemePathComponent(settings);
     return path.join(this.sourcesBasePath, theme);
+  }
+  /**
+   * Reads folder location with import files.
+   * @param {Object} settings Current application settings.
+   * @return {String}
+   */
+  _getImportDirLocation(settings) {
+    const theme = this._getThemePathComponent(settings);
+    return path.join(this.root, this.sourcesBasePath, theme);
   }
   /**
    * Reads web components import file location.
