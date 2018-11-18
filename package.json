@@ -11,12 +11,12 @@
   "author": "Pawel Psztyc",
   "license": "Apache-2.0",
   "dependencies": {
-    "@advanced-rest-client/arc-electron-preferences": "^1.0.0-rc1",
+    "@advanced-rest-client/arc-electron-preferences": "^1.0.0-rc2",
     "electron-log": "^2.2.17"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "electron": "^2.0.10",
+    "chai": "^4.2.0",
+    "electron": "^3.0.9",
     "electron-mocha": "^6.0.4",
     "mocha": "^4.1.0"
   }
