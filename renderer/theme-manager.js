@@ -85,10 +85,6 @@ class ThemeManager {
   /**
    * Activates the theme selected by the user.
    *
-   * Anypoint theme is a special case when the window has to be reloaded when
-   * switching from / to the theme. It loads different components definitions
-   * which cannot be updated once an element has been already registered.
-   *
    * @param {CustomEvent} e
    */
   _activateHandler(e) {
@@ -111,20 +107,21 @@ class ThemeManager {
   }
   /**
    * Loads theme file and activates it.
-   * @param {String} themeLocation Location of the theme file.
-   * @return {[type]} [description]
+   * @param {String} themeId ID of installed theme of location of theme file.
+   * @return {Promise}
    */
-  loadTheme(themeLocation) {
+  loadTheme(themeId) {
     return new Promise((resolve) => {
-      Polymer.importHref(themeLocation, (e) => {
+      Polymer.importHref('themes://' + themeId, (e) => {
         const module = e.target.import.querySelector('dom-module');
         if (!module) {
           console.error('Unable to read theme definition in loaded theme.');
           resolve();
           return;
         }
-        const id = module.id;
-        const el = Polymer.StyleGather.stylesFromModule(id)[0];
+        const t = module.querySelector('template');
+        const clone = document.importNode(t.content, true);
+        const el = clone.querySelector('style');
         const newStyle = new Polymer.CustomStyle();
         const sc = document.createElement('style');
         sc.innerText = el.innerText;
@@ -135,7 +132,7 @@ class ThemeManager {
           resolve();
         });
       }, () => {
-        console.error(`Unable to load theme definition from ${themeLocation}.`);
+        console.error(`Unable to load theme definition for ${themeId}.`);
         resolve();
       }, true);
     });
