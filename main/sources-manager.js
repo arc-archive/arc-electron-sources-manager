@@ -10,9 +10,7 @@ const {ThemeInfo} = require('./theme-info');
  *
  * For most cases ARC uses the default web components path which is located
  * in application config directory (this is different depending on the OS).
- * However some themes (namely anypoint theme) uses replacements for some
- * paper elements. Therefore the application sources has to be loaded from
- * different directory. This class tells the main application where the sources
+ * This class tells the main application where the sources
  * are and which theme to load.
  */
 class SourcesManager {
@@ -49,11 +47,6 @@ class SourcesManager {
      * @type {String}
      */
     this.defaultTheme = 'dd1b715f-af00-4ee8-8b0c-2a262b3cf0c8';
-    /**
-     * Anypoint theme ID
-     * @type {String}
-     */
-    this.anypointTheme = '859e0c71-ce8b-44df-843b-bca602c13d06';
     /**
      * Name of the default application import file.
      * @type {String}
@@ -119,7 +112,7 @@ class SourcesManager {
       this.prefsManager.load(),
       this.themeInfo.load()
     ])
-    .then((result) => this._getAppConfig(result[0], result[1]));
+    .then((result) => this._getAppConfig(...result));
   }
 
   _getAppConfig(settings, themeInfo) {
@@ -135,19 +128,17 @@ class SourcesManager {
       importDir: this._getImportDirLocation(settings),
       importFile: this._getImportFileLocation(settings, so),
       themeFile: this._getThemeFileLocation(settings, so, themeInfo),
-      searchFile: this._getSearchFileLocation(settings, so)
+      searchFile: this._getSearchFileLocation(settings, so),
+      theme: settings.theme || this.defaultTheme
     };
     return result;
   }
   /**
    * Returns name for the main theme location.
-   * Currently it can only be `anypoint` or `detault`.
-   * @param {?Object} settings Application settings
    * @return {String} Path component to the theme main folder.
    */
-  _getThemePathComponent(settings) {
-    const tid = (settings && settings.theme) || this.default;
-    return tid === this.anypointTheme ? 'anypoint' : 'default';
+  _getThemePathComponent() {
+    return 'default';
   }
   /**
    * Reads application web components location.
@@ -284,19 +275,13 @@ class SourcesManager {
    * @param {String} themeId
    */
   _activateHandler(e, id, themeId) {
-    let reload = false;
     this.prefsManager.load()
     .then((settings) => {
-      const at = this.anypointTheme;
-      if (themeId === at || settings.theme === at) {
-        reload = true;
-      }
       settings.theme = themeId;
       return this.prefsManager.store();
     })
     .then(() => this.getAppConfig())
     .then((config) => {
-      config.reload = reload;
       e.sender.send('theme-manager-theme-activated', id, config);
     })
     .then((cause) => {

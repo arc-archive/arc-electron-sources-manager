@@ -12,10 +12,6 @@ describe('SourcesManager basic tests- main process', function() {
     _id: 'dd1b715f-af00-4ee8-8b0c-2a262b3cf0c8',
     path: 'default',
     main: 'default.html'
-  }, {
-    _id: '859e0c71-ce8b-44df-843b-bca602c13d06',
-    path: 'anypoint',
-    main: 'anypoint.html'
   }];
 
   after(() => fs.remove(prefsFile));
@@ -46,14 +42,6 @@ describe('SourcesManager basic tests- main process', function() {
       assert.equal(result, so.appComponents);
     });
 
-    it('Returns anypoint path', function() {
-      const so = {};
-      const result = instance._getAppComponentsLocation({
-        theme: instance.anypointTheme
-      }, so);
-      assert.equal(result, 'components/anypoint');
-    });
-
     it('Returns default path', function() {
       const so = {};
       const result = instance._getAppComponentsLocation({}, so);
@@ -73,13 +61,6 @@ describe('SourcesManager basic tests- main process', function() {
       };
       const result = instance._getImportFileLocation({}, so);
       assert.equal(result, so.themeFile);
-    });
-
-    it('Returns anypoint path', function() {
-      const result = instance._getImportFileLocation({
-        theme: instance.anypointTheme
-      }, {});
-      assert.notEqual(result.indexOf('components/anypoint/import.html'), -1);
     });
 
     it('Returns default path', function() {
@@ -102,13 +83,6 @@ describe('SourcesManager basic tests- main process', function() {
       assert.equal(result, so.themeFile);
     });
 
-    it('Returns anypoint path', function() {
-      const result = instance._getThemeFileLocation({
-        theme: instance.anypointTheme
-      }, {}, themes);
-      assert.equal(result, 'anypoint/anypoint.html');
-    });
-
     it('Returns default path', function() {
       const result = instance._getThemeFileLocation({}, {}, themes);
       assert.equal(result, 'default/default.html');
@@ -129,13 +103,6 @@ describe('SourcesManager basic tests- main process', function() {
       assert.equal(result, so.searchFile);
     });
 
-    it('Returns anypoint path', function() {
-      const result = instance._getSearchFileLocation({
-        theme: instance.anypointTheme
-      }, {}, themes);
-      assert.notEqual(result.indexOf('components/anypoint/import-search-bar.html'), -1);
-    });
-
     it('Returns default path', function() {
       const result = instance._getSearchFileLocation({}, {}, themes);
       assert.notEqual(result.indexOf('components/default/import-search-bar.html'), -1);
@@ -151,25 +118,7 @@ describe('SourcesManager basic tests- main process', function() {
         assert.notEqual(info.importFile.indexOf('components/default/import.html'), -1);
         assert.notEqual(info.searchFile.indexOf('components/default/import-search-bar.html'), -1);
         assert.notEqual(info.themeFile.indexOf('default-theme'), -1);
-      });
-    });
-
-    it('Reads anypoint config', function() {
-      const instance = new SourcesManager(prefs, {});
-      instance.themeInfo.load = function() {
-        return Promise.resolve(themes);
-      };
-      instance.prefsManager.load = function() {
-        return Promise.resolve({
-          theme: instance.anypointTheme
-        });
-      };
-      return instance.getAppConfig()
-      .then((info) => {
-        assert.equal(info.appComponents, 'components/anypoint');
-        assert.notEqual(info.importFile.indexOf('components/anypoint/import.html'), -1);
-        assert.notEqual(info.searchFile.indexOf('components/anypoint/import-search-bar.html'), -1);
-        assert.notEqual(info.themeFile.indexOf('anypoint/anypoint.html'), -1);
+        assert.equal(info.theme, instance.defaultTheme);
       });
     });
   });
