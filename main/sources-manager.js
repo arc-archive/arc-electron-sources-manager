@@ -46,7 +46,7 @@ class SourcesManager {
      * ARC default theme ID
      * @type {String}
      */
-    this.defaultTheme = 'dd1b715f-af00-4ee8-8b0c-2a262b3cf0c8';
+    this.defaultTheme = 'advanced-rest-client/arc-electron-default-theme';
     /**
      * Name of the default application import file.
      * @type {String}
@@ -127,7 +127,6 @@ class SourcesManager {
       appComponents: this._getAppComponentsLocation(settings, so),
       importDir: this._getImportDirLocation(settings),
       importFile: this._getImportFileLocation(settings, so),
-      themeFile: this._getThemeFileLocation(settings, so, themeInfo),
       searchFile: this._getSearchFileLocation(settings, so),
       theme: settings.theme || this.defaultTheme
     };
@@ -190,29 +189,6 @@ class SourcesManager {
     }
     const theme = this._getThemePathComponent(settings);
     return path.join(this.root, this.sourcesBasePath, theme, this.searchFileName);
-  }
-  /**
-   * Reads location to the theme file.
-   * @param {Object} settings Current application settings.
-   * @param {Object} so Startup options
-   * @param {Array<Object>} themes List of installed themes
-   * @return {String} Path to the theme file.
-   */
-  _getThemeFileLocation(settings, so, themes) {
-    if (so.themeFile) {
-      return this.resolvePath(so.themeFile);
-    }
-    const tid = settings.theme || this.defaultTheme;
-    let theme = this._findThemeInfo(tid, themes);
-    if (!theme) {
-      log.error(`Theme for ID ${tid} does not exist. Reverting to default theme.`);
-      theme = this._findThemeInfo(this.defaultTheme, themes);
-    }
-    if (!theme) {
-      log.error('Theme configuration is missing.');
-      return path.join(this.themesBasePath, 'default-theme', 'default-theme.html');
-    }
-    return path.join(theme.path, theme.main);
   }
 
   _findThemeInfo(id, themes) {

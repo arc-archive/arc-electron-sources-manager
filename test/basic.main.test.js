@@ -60,32 +60,12 @@ describe('SourcesManager basic tests- main process', function() {
         importFile: 'test-path'
       };
       const result = instance._getImportFileLocation({}, so);
-      assert.equal(result, so.themeFile);
+      assert.equal(result, so.importFile);
     });
 
     it('Returns default path', function() {
       const result = instance._getImportFileLocation({}, {});
       assert.notEqual(result.indexOf('components/default/import.html'), -1);
-    });
-  });
-
-  describe('_getThemeFileLocation()', function() {
-    let instance;
-    before(() => {
-      instance = new SourcesManager(prefs, {});
-    });
-
-    it('Returns startup option', function() {
-      const so = {
-        themeFile: 'test-path'
-      };
-      const result = instance._getThemeFileLocation({}, so, themes);
-      assert.equal(result, so.themeFile);
-    });
-
-    it('Returns default path', function() {
-      const result = instance._getThemeFileLocation({}, {}, themes);
-      assert.equal(result, 'default/default.html');
     });
   });
 
@@ -117,7 +97,6 @@ describe('SourcesManager basic tests- main process', function() {
         assert.equal(info.appComponents, 'components/default');
         assert.notEqual(info.importFile.indexOf('components/default/import.html'), -1);
         assert.notEqual(info.searchFile.indexOf('components/default/import-search-bar.html'), -1);
-        assert.notEqual(info.themeFile.indexOf('default-theme'), -1);
         assert.equal(info.theme, instance.defaultTheme);
       });
     });
