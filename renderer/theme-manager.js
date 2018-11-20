@@ -112,21 +112,23 @@ class ThemeManager {
    */
   loadTheme(themeId) {
     return new Promise((resolve) => {
-      Polymer.importHref('themes://' + themeId, (e) => {
-        const module = e.target.import.querySelector('dom-module');
-        if (!module) {
-          console.error('Unable to read theme definition in loaded theme.');
-          resolve();
-          return;
+      // Apparently Polymer handles imports with `<custom-styles>`
+      // automatically and inserts it into the head section
+      const nodes = document.head.children;
+      let removeNextCustomStyle = false;
+      for (let i = 0, len = nodes.length; i < len; i++) {
+        const node = nodes[i];
+        if (node.nodeName === 'LINK' && node.rel === 'import' &&
+          node.href && node.href.indexOf('themes:') === 0) {
+          removeNextCustomStyle = true;
+          continue;
         }
-        const t = module.querySelector('template');
-        const clone = document.importNode(t.content, true);
-        const el = clone.querySelector('style');
-        const newStyle = new Polymer.CustomStyle();
-        const sc = document.createElement('style');
-        sc.innerText = el.innerText;
-        newStyle.appendChild(sc);
-        document.body.appendChild(newStyle);
+        if (removeNextCustomStyle && node.nodeName === 'CUSTOM-STYLE') {
+          node.parentNode.removeChild(node);
+          break;
+        }
+      }
+      Polymer.importHref('themes://' + themeId, () => {
         Polymer.RenderStatus.afterNextRender(this, () => {
           Polymer.updateStyles({});
           resolve();
