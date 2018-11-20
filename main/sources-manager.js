@@ -172,7 +172,7 @@ class SourcesManager {
    */
   _getImportFileLocation(settings, so) {
     if (so.importFile) {
-      return this.resolvePath(so.themeFile);
+      return this.resolvePath(so.importFile);
     }
     const theme = this._getThemePathComponent(settings);
     return path.join(this.root, this.sourcesBasePath, theme, this.importFileName);
